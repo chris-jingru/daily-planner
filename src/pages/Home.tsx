@@ -1,30 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import Input from "../components/Input";
 
 import Header from "../components/Header";
 export interface IHomeProps {}
-
 const Home: React.FC<IHomeProps> = (props) => {
   const auth = getAuth();
   const navigate = useNavigate();
 
+  const [tp, setTp] = useState<String>("");
+  // const [reminder, setReminder] = useState<String>("");
+  // const [td, setTd] = useState<String>("");
+  // const [note, setNote] = useState<String>("");
+
   return (
     <div>
       <Header />
-      <form action="">
-        <h2>Top Priorities</h2>
-      </form>
-      <form action="">
-        <h2>Reminders</h2>
-      </form>
-      <form action="">
-        <h2>To Do</h2>
-      </form>
-      <form action="">
-        <h2>Notes</h2>
-      </form>
-
+      <Input tp={tp as string} setTp={setTp} />
       <button
         onClick={() => {
           signOut(auth);
