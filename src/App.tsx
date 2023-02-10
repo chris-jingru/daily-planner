@@ -1,14 +1,30 @@
 import React from "react";
 import "./App.css";
-import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
+import { initializeApp } from "firebase/app";
+import { config } from "./config";
+import AuthRoute from "./components/AuthRoute";
 
-const App: React.FC = () => {
-  const [isAuth, setIsAuth] = useState<boolean>(false);
+initializeApp(config.firebaseConfig);
+
+export interface IAppProps {}
+const App: React.FC<IAppProps> = (props) => {
   return (
-    <div className="App">
-      <LogIn setIsAuth={setIsAuth} />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <AuthRoute>
+              <Home />
+            </AuthRoute>
+          }
+        />
+        <Route path="/login" element={<LogIn />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

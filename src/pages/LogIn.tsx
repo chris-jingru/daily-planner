@@ -1,23 +1,36 @@
-import React from "react";
-import { auth, provider } from "../firebase";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
-import { signInWithPopup } from "firebase/auth";
+export interface ILoginPageProps {}
+const LogIn: React.FC<ILoginPageProps> = (props) => {
+  const auth = getAuth();
+  const navigate = useNavigate();
+  const [authing, setAuthing] = useState<Boolean>(false);
 
-interface Props {
-  isAuth: boolean;
-  setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
-}
-const LogIn: React.FC = () => {
-  const signInWithGoogle = ({ setIsAuth }: Props) => {
-    // signInWithPopup(auth, provider);
+  const signInWithGoogle = async () => {
+    setAuthing(true);
+    signInWithPopup(auth, new GoogleAuthProvider())
+      .then((response) => {
+        console.log(response.user.uid);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        setAuthing(false);
+      });
   };
   return (
     <div>
-      <h1>Daily Planner</h1>
-      <div className="loginPage">
-        <p>Sign In With Google to Continue</p>
-        <button className="login-with-google-btn">Sign in with Google</button>
-      </div>
+      <p>Login</p>
+      <button
+        onClick={() => {
+          signInWithGoogle();
+        }}
+        disabled={Boolean(authing)}
+      >
+        Sign In With Google
+      </button>
     </div>
   );
 };
