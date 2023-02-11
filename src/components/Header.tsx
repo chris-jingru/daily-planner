@@ -1,9 +1,10 @@
+import AddItem from "./AddItem";
 const Header = () => {
   let date = new Date();
   let today = date.toLocaleDateString();
   return (
     <>
-      <div> + </div>
+      <AddItem />
       <h1>Daily Planner 1</h1>
       <div>Date:{today}</div>
     </>
