@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 interface Props {
   isShown: boolean;
@@ -8,11 +8,22 @@ const PlusInput = ({ isShown, setIsShown }: Props) => {
   const goBack = () => {
     setIsShown(false);
   };
+  const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div>
-      <form action="">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(inputRef.current!.value);
+        }}
+      >
         <label htmlFor="item-to-add"></label>
-        <input id="item-to-add" type="text" />
+        <input
+          id="item-to-add"
+          type="text"
+          onChange={() => {}}
+          ref={inputRef}
+        />
         <select name="" id="">
           <option value="">Top Priorities</option>
           <option value="">Reminders</option>
