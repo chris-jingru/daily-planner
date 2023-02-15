@@ -14,7 +14,9 @@ const PlusInput = ({ isShown, setIsShown }: Props) => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log(inputRef.current!.value);
+          const itemToAdd: string = inputRef.current!.value;
+          console.log(itemToAdd);
+          inputRef.current!.value = "";
         }}
       >
         <label htmlFor="item-to-add"></label>
@@ -24,7 +26,7 @@ const PlusInput = ({ isShown, setIsShown }: Props) => {
           onChange={() => {}}
           ref={inputRef}
         />
-        <select name="" id="">
+        <select name="" id="" required>
           <option value="">Top Priorities</option>
           <option value="">Reminders</option>
           <option value="">To Do</option>
