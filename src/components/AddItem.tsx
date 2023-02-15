@@ -9,30 +9,11 @@ const AddItem: React.FC = () => {
     setIsShown(true);
   };
 
-  const PlusInput = () => {
-    const goBack = () => {
-      setIsShown(false);
-    };
-    return (
-      <div>
-        <form action="">
-          <label htmlFor="item-to-add"></label>
-          <input id="item-to-add" type="text" />
-          <select name="" id="">
-            <option value="">Top Priorities</option>
-            <option value="">Reminders</option>
-            <option value="">To Do</option>
-            <option value="">Notes</option>
-          </select>
-
-          <button>Add</button>
-        </form>
-        <button onClick={goBack}>Go Back</button>
-      </div>
-    );
-  };
-
-  return <div onClick={openInput}>{isShown ? "←" : "+"}</div>;
+  return (
+    <div onClick={openInput}>
+      {isShown ? <PlusInput isShown={isShown} setIsShown={setIsShown} /> : "+"}
+    </div>
+  );
 };
 
 export default AddItem;

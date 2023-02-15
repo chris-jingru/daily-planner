@@ -21,8 +21,13 @@ const AuthRoute: React.FC<IAuthRouteProps> = (props) => {
   });
   useEffect(() => {
     AuthCheck();
-    return () => AuthCheck();
-  }, [auth, AuthCheck]);
+    console.log("Google");
+
+    return () => {
+      console.log("firefox");
+      AuthCheck();
+    };
+  }, [AuthCheck]);
   return <>{children}</>;
 };
 
