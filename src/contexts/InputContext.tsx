@@ -1,21 +1,17 @@
-import React, { createContext, useRef } from "react";
+import { createContext, useState } from "react";
 
-// interface InputContextType {
-//   input: string;
-//   setInput: React.Dispatch<React.SetStateAction<string>>;
-// }
-
-// export const InputContext = createContext<InputContextType>({
-//   input: "",
-//   setInput: () => {},
-// });
-
-interface InputContextValue {
-  inputRef: HTMLInputElement | null;
+interface InputContextType {
+  formInput: string;
+  setFormInput: React.Dispatch<React.SetStateAction<string>>;
+  formSelect: string;
+  setFormSelect: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const InputContext = createContext<InputContextValue>({
-  inputRef: null,
+const InputContext = createContext<InputContextType>({
+  formInput: "",
+  setFormInput: () => {},
+  formSelect: "",
+  setFormSelect: () => {},
 });
 
 interface InputProviderProps {
@@ -23,16 +19,15 @@ interface InputProviderProps {
 }
 
 export function InputProvider({ children }: InputProviderProps) {
-  // const [input, setInput] = useState("");
+  const [formInput, setFormInput] = useState("");
+  const [formSelect, setFormSelect] = useState("Top Priorities");
 
-  //const inputRef = useRef<HTMLInputElement | null>(null);
-
-  // const contextValue: InputContextType = {
-  //   input,
-  //   setInput,
-  // };
-
-  const contextValue: InputContextValue = { inputRef: null };
+  const contextValue: InputContextType = {
+    formInput,
+    setFormInput,
+    formSelect,
+    setFormSelect,
+  };
 
   return (
     <InputContext.Provider value={contextValue}>
@@ -41,4 +36,15 @@ export function InputProvider({ children }: InputProviderProps) {
   );
 }
 
-export default InputProvider;
+export default InputContext;
+
+//! Deprecated codes
+// interface InputContextValue {
+//   inputRef: HTMLInputElement | null;
+// }
+
+// export const InputContext = createContext<InputContextValue>({
+//   inputRef: null,
+// });
+
+//const contextValue: InputContextValue = { inputRef: null };

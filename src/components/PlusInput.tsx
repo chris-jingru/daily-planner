@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import { useState, useContext } from "react";
+import InputContext from "../contexts/InputContext";
 
 interface Props {
   isShown: boolean;
@@ -7,26 +8,18 @@ interface Props {
 const PlusInput = ({ isShown, setIsShown }: Props) => {
   const goBack = () => {
     setIsShown(false);
+    alert("hello");
   };
-  const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          const itemToAdd: string = inputRef.current!.value;
-          console.log(itemToAdd);
-          inputRef.current!.value = "";
         }}
       >
         <label htmlFor="item-to-add"></label>
-        <input
-          id="item-to-add"
-          type="text"
-          onChange={() => {}}
-          ref={inputRef}
-        />
-        <select name="" id="" required>
+        <input id="item-to-add" type="text" onChange={() => {}} />
+        <select name="formSelect" id="formSelect" required>
           <option value="">Top Priorities</option>
           <option value="">Reminders</option>
           <option value="">To Do</option>
@@ -35,9 +28,20 @@ const PlusInput = ({ isShown, setIsShown }: Props) => {
 
         <button>Add</button>
       </form>
-      <button onClick={goBack}>Go Back</button>
+      <button
+        onClick={() => {
+          goBack();
+        }}
+      >
+        Go Back
+      </button>
     </div>
   );
 };
 
 export default PlusInput;
+
+//! Deprecated codes
+// const whatYouWant = useRef<HTMLInputElement | null>();
+
+// const { inputRef } = React.useContext(InputContext);
