@@ -1,5 +1,4 @@
-import { useState, useContext } from "react";
-import InputContext from "../contexts/InputContext";
+import { useState, useReducer } from "react";
 
 interface Props {
   isShown: boolean;
