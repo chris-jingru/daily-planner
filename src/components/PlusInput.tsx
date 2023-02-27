@@ -1,13 +1,13 @@
-import { useState, useReducer } from "react";
-
 interface Props {
   isShown: boolean;
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>;
+  closeInput: () => void;
 }
-const PlusInput = ({ isShown, setIsShown }: Props) => {
+
+const PlusInput = ({ isShown, setIsShown, closeInput }: Props) => {
   const goBack = () => {
     setIsShown(false);
-    alert("hello");
+    closeInput();
   };
   return (
     <div>
@@ -19,21 +19,15 @@ const PlusInput = ({ isShown, setIsShown }: Props) => {
         <label htmlFor="item-to-add"></label>
         <input id="item-to-add" type="text" onChange={() => {}} />
         <select name="formSelect" id="formSelect" required>
-          <option value="">Top Priorities</option>
-          <option value="">Reminders</option>
-          <option value="">To Do</option>
-          <option value="">Notes</option>
+          <option value="top-priorities">Top Priorities</option>
+          <option value="reminders">Reminders</option>
+          <option value="to-do">To Do</option>
+          <option value="notes">Notes</option>
         </select>
 
         <button>Add</button>
       </form>
-      <button
-        onClick={() => {
-          goBack();
-        }}
-      >
-        Go Back
-      </button>
+      <button onClick={goBack}>Go Back</button>
     </div>
   );
 };
