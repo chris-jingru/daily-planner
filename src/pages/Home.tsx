@@ -1,22 +1,99 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
-import Input from "../components/Input";
-import Header from "../components/Header";
+
+//import Header from "../components/Header";
+
+interface Todo {
+  id: number;
+  userInput: string;
+}
+
+type Action =
+  | { type: "add"; payload: Todo }
+  | { type: "delete"; payload: Todo };
+
+const reducer = (todos: Todo[], action: Action) => {
+  switch (action.type) {
+    case "add":
+      return [...todos, action.payload];
+    case "delete":
+      return todos.filter((todo) => todo.id !== action.payload.id);
+    default:
+      return todos;
+  }
+};
+
 export interface IHomeProps {}
 const Home: React.FC<IHomeProps> = (props) => {
   const auth = getAuth();
   const navigate = useNavigate();
 
-  const [tp, setTp] = useState<String>("");
+  const [userInput, setUserInput] = useState<string>("");
   // const [reminder, setReminder] = useState<String>("");
   // const [td, setTd] = useState<String>("");
   // const [note, setNote] = useState<String>("");
+  const [todos, dispatch] = useReducer<React.Reducer<Todo[], Action>>(
+    reducer,
+    []
+  );
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch({
+      type: "add",
+      payload: { userInput: userInput, id: Date.now() },
+    });
+    setUserInput("");
+  };
   return (
     <div>
-      <Header />
-      <Input tp={tp as string} setTp={setTp} />
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="item-to-add"></label>
+        <input
+          id="item-to-add"
+          type="text"
+          value={userInput}
+          onChange={handleChange}
+        />
+        <select name="formSelect" id="formSelect" required defaultValue="">
+          <option value="" disabled hidden>
+            Pick One
+          </option>
+          <option value="top-priorities">Top Priorities</option>
+          <option value="reminders">Reminders</option>
+          <option value="to-do">To Do</option>
+          <option value="notes">Notes</option>
+        </select>
+
+        <button type="submit">Add</button>
+      </form>
+      <section>
+        <div>
+          <h2>Top Priorities</h2>
+          <ul>
+            {todos.map((todo) => {
+              return <li key={todo.id}>{todo.userInput}</li>;
+            })}
+          </ul>
+        </div>
+        <div>
+          <h2>Reminders</h2>
+          <ul></ul>
+        </div>
+        <div>
+          <h2>To Do</h2>
+          <ul></ul>
+        </div>
+        <div>
+          <h2>Notes</h2>
+          <ul></ul>
+        </div>
+      </section>
       <button
         onClick={() => {
           signOut(auth);

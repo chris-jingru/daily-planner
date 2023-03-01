@@ -56,7 +56,10 @@
 
 import React, { useState } from "react";
 import PlusInput from "./PlusInput";
-
+// type Props = {
+//   openInput: () => void;
+//   closeInput: () => void;
+// };
 const AddItem: React.FC = () => {
   const [isShown, setIsShown] = useState(false);
 
