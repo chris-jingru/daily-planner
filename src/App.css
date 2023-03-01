@@ -248,3 +248,7 @@ html {
     transform: rotate(360deg);
   }
 }
+
+body {
+  text-align: center;
+}
