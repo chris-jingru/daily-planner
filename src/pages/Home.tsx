@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 
@@ -7,6 +7,7 @@ import { getAuth, signOut } from "firebase/auth";
 interface Todo {
   id: number;
   userInput: string;
+  optionSelect: string;
 }
 
 type Action =
@@ -30,9 +31,8 @@ const Home: React.FC<IHomeProps> = (props) => {
   const navigate = useNavigate();
 
   const [userInput, setUserInput] = useState<string>("");
-  // const [reminder, setReminder] = useState<String>("");
-  // const [td, setTd] = useState<String>("");
-  // const [note, setNote] = useState<String>("");
+  const [optionSelect, setOptionSelect] = useState<string>("");
+
   const [todos, dispatch] = useReducer<React.Reducer<Todo[], Action>>(
     reducer,
     []
@@ -42,14 +42,22 @@ const Home: React.FC<IHomeProps> = (props) => {
     setUserInput(e.target.value);
   };
 
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setOptionSelect(e.target.value);
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch({
       type: "add",
-      payload: { userInput: userInput, id: Date.now() },
+      payload: {
+        userInput: userInput,
+        id: Date.now(),
+        optionSelect: optionSelect,
+      },
     });
     setUserInput("");
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -59,8 +67,15 @@ const Home: React.FC<IHomeProps> = (props) => {
           type="text"
           value={userInput}
           onChange={handleChange}
+          required
         />
-        <select name="formSelect" id="formSelect" required defaultValue="">
+        <select
+          name="formSelect"
+          id="formSelect"
+          required
+          defaultValue=""
+          onChange={handleSelect}
+        >
           <option value="" disabled hidden>
             Pick One
           </option>
@@ -73,18 +88,30 @@ const Home: React.FC<IHomeProps> = (props) => {
         <button type="submit">Add</button>
       </form>
       <section>
-        <div>
-          <h2>Top Priorities</h2>
-          <ul>
-            {todos.map((todo) => {
-              return <li key={todo.id}>{todo.userInput}</li>;
-            })}
-          </ul>
-        </div>
-        <div>
-          <h2>Reminders</h2>
-          <ul></ul>
-        </div>
+        <h2>Top Priorities</h2>
+        {optionSelect === "top-priorities" && (
+          <div>
+            <ul>
+              {todos
+                .filter((todo) => todo.optionSelect === "top-priorities")
+                .map((todo) => {
+                  return <li key={todo.id}>{todo.userInput}</li>;
+                })}
+            </ul>
+          </div>
+        )}
+        <h2>Reminders</h2>
+        {optionSelect === "reminders" && (
+          <div>
+            <ul>
+              {todos
+                .filter((todo) => todo.optionSelect === "reminders")
+                .map((todo) => {
+                  return <li key={todo.id}>{todo.userInput}</li>;
+                })}
+            </ul>
+          </div>
+        )}
         <div>
           <h2>To Do</h2>
           <ul></ul>
