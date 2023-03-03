@@ -88,7 +88,7 @@ const Home: React.FC<IHomeProps> = (props) => {
         <button type="submit">Add</button>
       </form>
       <section>
-        <h2>Top Priorities</h2>
+        <h2 className="underline">Top Priorities</h2>
         {optionSelect === "top-priorities" && (
           <div>
             <ul>
@@ -122,6 +122,7 @@ const Home: React.FC<IHomeProps> = (props) => {
         </div>
       </section>
       <button
+        className="bg-red-50"
         onClick={() => {
           signOut(auth);
           navigate("/");
