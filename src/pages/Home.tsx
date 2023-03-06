@@ -9,12 +9,14 @@ import { MdOutlineDownloadDone } from "react-icons/md";
 interface Todo {
   id: number;
   userInput: string;
-  optionSelect: string;
+  optionSelect?: string;
+  isComplete?: boolean;
 }
 
 type Action =
   | { type: "add"; payload: Todo }
-  | { type: "delete"; payload: Todo };
+  | { type: "delete"; payload: Todo }
+  | { type: "complete"; payload: Todo };
 
 const reducer = (todos: Todo[], action: Action) => {
   switch (action.type) {
@@ -22,6 +24,12 @@ const reducer = (todos: Todo[], action: Action) => {
       return [...todos, action.payload];
     case "delete":
       return todos.filter((todo) => todo.id !== action.payload.id);
+    case "complete":
+      return todos.map((todo) =>
+        todo.id === action.payload.id
+          ? { ...todo, isComplete: !todo.isComplete }
+          : todo
+      );
     default:
       return todos;
   }
@@ -58,6 +66,26 @@ const Home: React.FC<IHomeProps> = (props) => {
       },
     });
     setUserInput("");
+  };
+
+  const handleDelete = (todo: Todo) => {
+    dispatch({
+      type: "delete",
+      payload: {
+        userInput,
+        id: todo.id,
+      },
+    });
+  };
+
+  const handleComplete = (todo: Todo) => {
+    dispatch({
+      type: "complete",
+      payload: {
+        userInput,
+        id: todo.id,
+      },
+    });
   };
 
   return (
@@ -98,18 +126,22 @@ const Home: React.FC<IHomeProps> = (props) => {
                 {todos
                   .filter((todo) => todo.optionSelect === category)
                   .map((todo) => (
-                    <div className="text-red-500 flex justify-around p-2 bg-gray-500">
+                    <div
+                      className={`text-white flex justify-around p-2 bg-gray-500 ${
+                        todo.isComplete ? "line-through" : ""
+                      }`}
+                    >
                       <div key={todo.id}>{todo.userInput}</div>
                       <div className="w-1/4 flex justify-between hover:cursor-pointer">
-                        <div>
+                        <button>
                           <FaPenAlt />
-                        </div>
-                        <div>
+                        </button>
+                        <button onClick={() => handleComplete(todo)}>
                           <MdOutlineDownloadDone />
-                        </div>
-                        <div>
+                        </button>
+                        <button onClick={() => handleDelete(todo)}>
                           <FaTrashAlt />
-                        </div>
+                        </button>
                       </div>
                     </div>
                   ))}
