@@ -1,6 +1,8 @@
 import React, { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import { FaTrashAlt, FaPenAlt } from "react-icons/fa";
+import { MdOutlineDownloadDone } from "react-icons/md";
 
 //import Header from "../components/Header";
 
@@ -88,19 +90,30 @@ const Home: React.FC<IHomeProps> = (props) => {
         <button type="submit">Add</button>
       </form>
       <section>
-        {["top-priorities", "reminders", "to-do", "notes"].map((section) => (
-          <div key={section}>
-            <h2 className="underline">{section}</h2>
+        {["top-priorities", "reminders", "to-do", "notes"].map((category) => (
+          <div key={category}>
+            <h2 className="underline">{category}</h2>
             <div className="border-black border-2 w-1/2 h-48 bg-red-50 m-0 m-auto">
-              <ul>
+              <div>
                 {todos
-                  .filter((todo) => todo.optionSelect === section)
+                  .filter((todo) => todo.optionSelect === category)
                   .map((todo) => (
-                    <li className="text-red-500" key={todo.id}>
-                      {todo.userInput}
-                    </li>
+                    <div className="text-red-500 flex justify-around p-2 bg-gray-500">
+                      <div key={todo.id}>{todo.userInput}</div>
+                      <div className="w-1/4 flex justify-between hover:cursor-pointer">
+                        <div>
+                          <FaPenAlt />
+                        </div>
+                        <div>
+                          <MdOutlineDownloadDone />
+                        </div>
+                        <div>
+                          <FaTrashAlt />
+                        </div>
+                      </div>
+                    </div>
                   ))}
-              </ul>
+              </div>
             </div>
           </div>
         ))}
