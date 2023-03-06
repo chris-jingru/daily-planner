@@ -9,7 +9,7 @@ import { MdOutlineDownloadDone } from "react-icons/md";
 interface Todo {
   id: number;
   userInput: string;
-  optionSelect: string;
+  optionSelect?: string;
 }
 
 type Action =
@@ -60,6 +60,16 @@ const Home: React.FC<IHomeProps> = (props) => {
     setUserInput("");
   };
 
+  const handleDelete = (todo: Todo) => {
+    dispatch({
+      type: "delete",
+      payload: {
+        userInput,
+        id: todo.id,
+      },
+    });
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -101,15 +111,15 @@ const Home: React.FC<IHomeProps> = (props) => {
                     <div className="text-red-500 flex justify-around p-2 bg-gray-500">
                       <div key={todo.id}>{todo.userInput}</div>
                       <div className="w-1/4 flex justify-between hover:cursor-pointer">
-                        <div>
+                        <button>
                           <FaPenAlt />
-                        </div>
-                        <div>
+                        </button>
+                        <button>
                           <MdOutlineDownloadDone />
-                        </div>
-                        <div>
+                        </button>
+                        <button onClick={() => handleDelete(todo)}>
                           <FaTrashAlt />
-                        </div>
+                        </button>
                       </div>
                     </div>
                   ))}
