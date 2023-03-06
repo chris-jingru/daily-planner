@@ -88,46 +88,22 @@ const Home: React.FC<IHomeProps> = (props) => {
         <button type="submit">Add</button>
       </form>
       <section>
-        <h2 className="underline">Top Priorities</h2>
-        <div className="border-black border-2 w-1/2 h-48 bg-red-50 m-0 m-auto">
-          {optionSelect === "top-priorities" && (
-            <div>
+        {["top-priorities", "reminders", "to-do", "notes"].map((section) => (
+          <div key={section}>
+            <h2 className="underline">{section}</h2>
+            <div className="border-black border-2 w-1/2 h-48 bg-red-50 m-0 m-auto">
               <ul>
                 {todos
-                  .filter((todo) => todo.optionSelect === "top-priorities")
-                  .map((todo) => {
-                    return (
-                      <li className="text-red-500" key={todo.id}>
-                        {todo.userInput}
-                      </li>
-                    );
-                  })}
+                  .filter((todo) => todo.optionSelect === section)
+                  .map((todo) => (
+                    <li className="text-red-500" key={todo.id}>
+                      {todo.userInput}
+                    </li>
+                  ))}
               </ul>
             </div>
-          )}
-        </div>
-        <h2>Reminders</h2>
-        <div className="border-black border-2 w-1/2 h-48 bg-red-50 m-0 m-auto">
-          {optionSelect === "reminders" && (
-            <div>
-              <ul>
-                {todos
-                  .filter((todo) => todo.optionSelect === "reminders")
-                  .map((todo) => {
-                    return <li key={todo.id}>{todo.userInput}</li>;
-                  })}
-              </ul>
-            </div>
-          )}
-        </div>
-        <div>
-          <h2>To Do</h2>
-          <ul></ul>
-        </div>
-        <div>
-          <h2>Notes</h2>
-          <ul></ul>
-        </div>
+          </div>
+        ))}
       </section>
       <button
         className="bg-red-50"
