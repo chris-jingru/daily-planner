@@ -10,13 +10,16 @@ interface Todo {
   id: number;
   userInput: string;
   optionSelect?: string;
-  isComplete?: boolean;
+  complete?: boolean;
+  // edit?: boolean;
+  editTo?: string;
 }
 
 type Action =
   | { type: "add"; payload: Todo }
   | { type: "delete"; payload: Todo }
-  | { type: "complete"; payload: Todo };
+  | { type: "complete"; payload: Todo }
+  | { type: "edit"; payload: Todo };
 
 const reducer = (todos: Todo[], action: Action) => {
   switch (action.type) {
@@ -27,9 +30,14 @@ const reducer = (todos: Todo[], action: Action) => {
     case "complete":
       return todos.map((todo) =>
         todo.id === action.payload.id
-          ? { ...todo, isComplete: !todo.isComplete }
+          ? { ...todo, complete: !todo.complete }
           : todo
       );
+    case "edit":
+      return todos.map((todo) =>
+        todo.id === action.payload.id ? { ...todo, edit: !todo.complete } : todo
+      );
+
     default:
       return todos;
   }
@@ -42,7 +50,8 @@ const Home: React.FC<IHomeProps> = (props) => {
 
   const [userInput, setUserInput] = useState<string>("");
   const [optionSelect, setOptionSelect] = useState<string>("");
-
+  const [edit, setEdit] = useState<boolean>(false);
+  const [editTo, setEditTo] = useState<string>("");
   const [todos, dispatch] = useReducer<React.Reducer<Todo[], Action>>(
     reducer,
     []
@@ -87,6 +96,17 @@ const Home: React.FC<IHomeProps> = (props) => {
       },
     });
   };
+  const handleEdit = (e: React.FormEvent<HTMLFormElement>, todo: Todo) => {
+    e.preventDefault();
+    dispatch({
+      type: "edit",
+      payload: {
+        userInput,
+        id: todo.id,
+      },
+    });
+    setEditTo("");
+  };
 
   return (
     <div>
@@ -127,13 +147,29 @@ const Home: React.FC<IHomeProps> = (props) => {
                   .filter((todo) => todo.optionSelect === category)
                   .map((todo) => (
                     <div
-                      className={`text-white flex justify-around p-2 bg-gray-500 ${
-                        todo.isComplete ? "line-through" : ""
+                      key={todo.id}
+                      className={`text-black flex justify-around p-2 bg-gray-500 ${
+                        todo.complete ? "line-through" : ""
                       }`}
                     >
-                      <div key={todo.id}>{todo.userInput}</div>
+                      <form onSubmit={(e) => handleEdit(e, todo)}>
+                        {edit ? (
+                          <input
+                            value={editTo}
+                            onChange={(e) => setEditTo(e.target.value)}
+                          />
+                        ) : (
+                          todo.userInput
+                        )}
+                      </form>
                       <div className="w-1/4 flex justify-between hover:cursor-pointer">
-                        <button>
+                        <button
+                          onClick={() => {
+                            if (!edit && !todo.complete) {
+                              setEdit(!edit);
+                            }
+                          }}
+                        >
                           <FaPenAlt />
                         </button>
                         <button onClick={() => handleComplete(todo)}>
