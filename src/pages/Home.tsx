@@ -10,13 +10,15 @@ interface Todo {
   id: number;
   userInput: string;
   optionSelect?: string;
-  isComplete?: boolean;
+  complete?: boolean;
+  //edit?: boolean;
 }
 
 type Action =
   | { type: "add"; payload: Todo }
   | { type: "delete"; payload: Todo }
-  | { type: "complete"; payload: Todo };
+  | { type: "complete"; payload: Todo }
+  | { type: "edit"; payload: Todo };
 
 const reducer = (todos: Todo[], action: Action) => {
   switch (action.type) {
@@ -27,9 +29,18 @@ const reducer = (todos: Todo[], action: Action) => {
     case "complete":
       return todos.map((todo) =>
         todo.id === action.payload.id
-          ? { ...todo, isComplete: !todo.isComplete }
+          ? { ...todo, complete: !todo.complete }
           : todo
       );
+    case "edit":
+      return todos.map((todo) => {
+        if (todo.id === action.payload.id) {
+          console.log(action.payload.userInput);
+          return action.payload;
+        } else {
+          return todo;
+        }
+      });
     default:
       return todos;
   }
@@ -88,6 +99,16 @@ const Home: React.FC<IHomeProps> = (props) => {
     });
   };
 
+  const handleEdit = (todo: Todo) => {
+    dispatch({
+      type: "edit",
+      payload: {
+        userInput,
+        id: todo.id,
+      },
+    });
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -127,13 +148,18 @@ const Home: React.FC<IHomeProps> = (props) => {
                   .filter((todo) => todo.optionSelect === category)
                   .map((todo) => (
                     <div
+                      key={todo.id}
                       className={`text-white flex justify-around p-2 bg-gray-500 ${
-                        todo.isComplete ? "line-through" : ""
+                        todo.complete ? "line-through" : ""
                       }`}
                     >
-                      <div key={todo.id}>{todo.userInput}</div>
+                      <div>{todo.userInput}</div>
                       <div className="w-1/4 flex justify-between hover:cursor-pointer">
-                        <button>
+                        <button
+                          onClick={() => {
+                            handleEdit(todo);
+                          }}
+                        >
                           <FaPenAlt />
                         </button>
                         <button onClick={() => handleComplete(todo)}>

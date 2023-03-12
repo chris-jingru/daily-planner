@@ -1,11 +1,12 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
+//import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
 import { initializeApp } from "firebase/app";
 import { config } from "./config";
 import AuthRoute from "./components/AuthRoute";
+import TodoApp from "./pages/HomeTest";
 
 initializeApp(config.firebaseConfig);
 
@@ -17,7 +18,7 @@ const App: React.FC = () => {
           path="/"
           element={
             <AuthRoute>
-              <Home />
+              <TodoApp />
             </AuthRoute>
           }
         />
